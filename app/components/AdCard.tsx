@@ -2,6 +2,9 @@
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useState, useEffect, useCallback, useRef } from 'react';
+import AdTagEditor from './ads/AdTagEditor';
+import { getTagsForAd } from '../lib/actions/tags.actions';
+import { createClient } from '@/app/utils/supabase/client';
 
 interface AdCardProps {
     ad: Ad;
@@ -9,7 +12,7 @@ interface AdCardProps {
 
 export default function AdCard({ ad }: AdCardProps) {
     const [isExpanded, setIsExpanded] = useState(false);
-    const [adTags, setAdTags] = useState<Tag[]>([]);
+    const [adTags, setAdTags] = useState<Tag[]>(Array.isArray(ad.tags) ? ad.tags : []);
     const [isLoadingTags, setIsLoadingTags] = useState(true);
     const [tagError, setTagError] = useState<string | null>(null);
     const [tagEditorAnchor, setTagEditorAnchor] = useState<DOMRect | null>(null);
@@ -19,10 +22,55 @@ export default function AdCard({ ad }: AdCardProps) {
     const videoRef = useRef<HTMLVideoElement>(null);
     const adLines = ad.ad_text?.split('\n') || [];
     const [showTagEditor, setShowTagEditor] = useState(false);
-    // const LOGGEDIN_USER = useLoggedInUser();
+    const [userId, setUserId] = useState<string | null>(null);
+
+    // Load tags data
+    const loadTags = useCallback(async () => {
+        // if (!userId) return;
+        const supabase = createClient();
+        const { data: { user } } = await supabase.auth.getUser();
+        const userId = user?.id || null;
+        if (!userId) return;
+        
+        try {
+
+            setIsLoadingTags(true);
+            setTagError(null);
+            const tags = await getTagsForAd(ad.id, userId);
+            setAdTags(tags);
+        } catch (error) {
+            console.error('Error loading tags:', error);
+            setTagError('Failed to load tags');
+        } finally {
+            setIsLoadingTags(false);
+        }
+    }, [ad.id, userId]);
+
+    // Load tags when userId is available
+    useEffect(() => {
+        if (userId) {
+            loadTags();
+        }
+    }, [loadTags, userId]);
 
     const toggleExpand = () => {
         setIsExpanded(!isExpanded);
+    };
+
+    const handleTagClick = (event: React.MouseEvent<HTMLDivElement>) => {
+        const rect = event.currentTarget.getBoundingClientRect();
+        setTagEditorAnchor(rect);
+        setShowTagEditor(true);
+    };
+
+    const handleTagsChange = (newTags: Tag[]) => {
+        setAdTags(newTags);
+    };
+
+    const handleTagEditorClose = () => {
+        setShowTagEditor(false);
+        // Reload tags to ensure we have the latest data
+        loadTags();
     };
 
     const handleThumbnailClick = () => {
@@ -33,7 +81,7 @@ export default function AdCard({ ad }: AdCardProps) {
             videoRef.current.play().catch(err => console.error('Error playing video:', err));
           }
         }, 100);
-      };
+    };
 
     return (
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
@@ -140,38 +188,36 @@ export default function AdCard({ ad }: AdCardProps) {
                 ) : null}
             </div>
 
-            {/* Tags section */}
-            <div className="px-4 py-2 border-t">
-  <div
-    className="flex flex-wrap gap-1.5 items-center min-h-[24px] cursor-pointer hover:bg-gray-50 transition-colors p-1 rounded"
-  >
-    {Array.isArray(ad.tags) && ad.tags.length > 0 ? (
-      ad.tags.map((tag: Tag) => (
-        <span
-          key={tag.id}
-          className="px-2 py-0.5 text-xs rounded"
-          style={{ backgroundColor: tag.color || '#F3F4F6' }}
-        >
-          {tag.name}
-        </span>
-      ))
-    ) : (
-      <span className="text-xs text-gray-400">Add tags...</span>
-    )}
-  </div>
-</div>
+            {/* Tags Section */}
+            <div
+                className="flex flex-wrap gap-1.5 items-center min-h-[24px] cursor-pointer hover:bg-gray-50 transition-colors p-1 rounded"
+                onClick={handleTagClick}
+            >
+                {adTags.length > 0 ? (
+                    adTags.map((tag) => (
+                        <div
+                            key={tag.id}
+                            className="px-2 py-0.5 text-xs rounded"
+                            style={{ backgroundColor: tag.color || '#E5E7EB' }}
+                        >
+                            {tag.name}
+                        </div>
+                    ))
+                ) : (
+                    <span className="text-gray-400 text-sm">Add tags...</span>
+                )}
+            </div>
 
-
-            {/* Tag Editor Portal */}
-            {/* {showTagEditor && (
-        <AdTagEditor
-          adId={ad.id}
-          onClose={handleTagEditorClose}
-          anchorRect={tagEditorAnchor}
-          currentTags={adTags}
-          onTagsChange={handleTagsChange}
-        />
-      )} */}
+            {/* Tag Editor */}
+            {showTagEditor && (
+                <AdTagEditor
+                    adId={ad.id}
+                    onClose={handleTagEditorClose}
+                    anchorRect={tagEditorAnchor}
+                    currentTags={adTags}
+                    onTagsChange={handleTagsChange}
+                />
+            )}
         </div>
     );
 }
