@@ -5,7 +5,7 @@ import Image from 'next/image'
 import React, { useState, useEffect } from 'react'
 import { usePathname } from 'next/navigation'
 // import CreditUpdater from '../CreditUpdater'
-import { ROUTES, NAV_LINKS } from '../../lib/constants/routes'
+import { ROUTES, NAV_LINKS } from '../../constants/routes'
 
 const Navbar = () => {
   const pathname = usePathname()
