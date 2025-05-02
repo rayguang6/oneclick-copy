@@ -145,7 +145,7 @@ export default function AdCard({ ad }: AdCardProps) {
   <div
     className="flex flex-wrap gap-1.5 items-center min-h-[24px] cursor-pointer hover:bg-gray-50 transition-colors p-1 rounded"
   >
-    {ad.tags && ad.tags.length > 0 ? (
+    {Array.isArray(ad.tags) && ad.tags.length > 0 ? (
       ad.tags.map((tag: Tag) => (
         <span
           key={tag.id}
