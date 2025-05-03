@@ -55,9 +55,12 @@ const HomeFilter = ({ userId }: HomeFilterProps) => {
         });
         setActive('');
       } else {
-        // Set new filter
+        // Set new filter and reset page to 1
         newUrl = formUrlQuery({
-          params: searchParams.toString(),
+          params: removeKeysFromUrlQuery({
+            params: searchParams.toString(),
+            keysToRemove: ['page']
+          }),
           key: 'filter',
           value: tagId,
         });

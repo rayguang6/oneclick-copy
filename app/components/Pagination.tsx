@@ -19,6 +19,17 @@ const Pagination = ({ page = 1, totalPages, containerClasses }: Props) => {
 
   const currentPage = Number(page);
 
+  // Redirect to page 1 if current page is invalid
+  if (currentPage > totalPages && totalPages > 0) {
+    const newUrl = formUrlQuery({
+      params: searchParams.toString(),
+      key: "page",
+      value: "1",
+    });
+    router.push(newUrl);
+    return null;
+  }
+
   const handleNavigation = (targetPage: number) => {
     const newUrl = formUrlQuery({
       params: searchParams.toString(),
@@ -89,9 +100,9 @@ const Pagination = ({ page = 1, totalPages, containerClasses }: Props) => {
       <Button
         onClick={() => handleNavigation(currentPage - 1)}
         disabled={currentPage === 1}
-        className="cursor-pointer light-border-2 btn flex min-h-[36px] items-center justify-center gap-2 border hover:bg-gray-800"
+        className="cursor-pointer btn flex min-h-[36px] items-center justify-center gap-2 border hover:bg-gray-700"
       >
-        <p className="body-medium text-dark200_light800">Prev</p>
+        <p className="">Prev</p>
       </Button>
 
       {/* Page Numbers */}
@@ -105,10 +116,11 @@ const Pagination = ({ page = 1, totalPages, containerClasses }: Props) => {
             <button
               key={pageNum}
               onClick={() => handleNavigation(pageNum)}
-              className={`cursor-pointer min-w-[36px] rounded-md px-3.5 py-2 transition-all duration-200 ${
-                currentPage === pageNum
-                  ? "bg-blue-500 text-white font-medium shadow-sm"
-                  : "bg-white text-gray-700 border border-gray-200 hover:bg-gray-50"
+              disabled={pageNum === currentPage}
+              className={`min-w-[36px] rounded-md px-3.5 py-2 cursor-pointer ${
+                pageNum === currentPage
+                  ? "bg-blue-500 text-white"
+                  : "bg-gray-50 text-gray-700 hover:bg-gray-100"
               }`}
             >
               {pageNum}
@@ -120,10 +132,10 @@ const Pagination = ({ page = 1, totalPages, containerClasses }: Props) => {
       {/* Next Page Button */}
       <Button
         onClick={() => handleNavigation(currentPage + 1)}
-        disabled={currentPage === totalPages}
-        className="cursor-pointer light-border-2 btn flex min-h-[36px] items-center justify-center gap-2 border hover:bg-gray-800"
+        disabled={currentPage >= totalPages}
+        className="cursor-pointer btn flex min-h-[36px] items-center justify-center gap-2 border hover:bg-gray-700"
       >
-        <p className="body-medium">Next</p>
+        <p className="">Next</p>
       </Button>
     </div>
   );

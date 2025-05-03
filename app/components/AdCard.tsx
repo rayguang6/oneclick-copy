@@ -10,9 +10,10 @@ import { createPortal } from 'react-dom';
 
 interface AdCardProps {
     ad: Ad;
+    readOnly?: boolean;
 }
 
-export default function AdCard({ ad }: AdCardProps) {
+export default function AdCard({ ad, readOnly = false }: AdCardProps) {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [adTags, setAdTags] = useState<Tag[]>(Array.isArray(ad.tags) ? ad.tags : []);
     const [isLoadingTags, setIsLoadingTags] = useState(true);
@@ -220,7 +221,7 @@ export default function AdCard({ ad }: AdCardProps) {
                 {/* Tags Section */}
                 <div
                     className="mt-auto border-t border-gray-200 flex flex-wrap gap-1.5 items-center min-h-[40px] hover:bg-gray-50 transition-colors p-2 shrink-0"
-                    onClick={(e) => handleTagClick(e, false)}
+                    onClick={(e) => !readOnly && handleTagClick(e, false)}
                 >
                     {adTags.length > 0 ? (
                         adTags.map((tag) => (
@@ -353,7 +354,8 @@ export default function AdCard({ ad }: AdCardProps) {
             )}
 
             {/* Tag Editor Portal */}
-            {showTagEditor && createPortal(
+            {/* Only show tag editor if not read only */}
+            {showTagEditor && !readOnly && createPortal(
                 <AdTagEditor
                     adId={ad.id}
                     onClose={handleTagEditorClose}
