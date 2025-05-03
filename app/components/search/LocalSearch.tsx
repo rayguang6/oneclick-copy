@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 
 import { formUrlQuery, removeKeysFromUrlQuery } from "@/app/lib/url";
 import { Input } from "@/components/ui/input";
@@ -26,14 +26,31 @@ const LocalSearch = ({
   const router = useRouter();
   const searchParams = useSearchParams();
   const query = searchParams.get("query") || "";
-
   const [searchQuery, setSearchQuery] = useState(query);
+  const previousQuery = useRef(query);
+
+  useEffect(() => {
+    // Only update if the query param has changed
+    if (query !== previousQuery.current) {
+      setSearchQuery(query);
+      previousQuery.current = query;
+    }
+  }, [query]);
 
   useEffect(() => {
     const delayDebounceFn = setTimeout(() => {
+      // Only proceed if the search query has actually changed from the URL query
+      if (searchQuery === previousQuery.current) {
+        return;
+      }
+
       if (searchQuery) {
-        const newUrl = formUrlQuery({
+        const paramsWithoutPage = removeKeysFromUrlQuery({
           params: searchParams.toString(),
+          keysToRemove: ["page"],
+        });
+        const newUrl = formUrlQuery({
+          params: paramsWithoutPage,
           key: "query",
           value: searchQuery,
         });
@@ -43,12 +60,14 @@ const LocalSearch = ({
         if (pathname === route) {
           const newUrl = removeKeysFromUrlQuery({
             params: searchParams.toString(),
-            keysToRemove: ["query"],
+            keysToRemove: ["query", "page"],
           });
 
           router.push(newUrl, { scroll: false });
         }
       }
+      
+      previousQuery.current = searchQuery;
     }, 300);
 
     return () => clearTimeout(delayDebounceFn);

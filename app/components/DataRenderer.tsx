@@ -2,7 +2,6 @@ import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 
-// import { DEFAULT_EMPTY, DEFAULT_ERROR } from "@/app/constants/states";
 
 import { Button } from "@/components/ui/button";
 
@@ -14,11 +13,11 @@ interface Props<T> {
   };
   data: T[] | null | undefined;
   empty: {
-    title?: string;
-    message?: string;
+    title: string;
+    message: string;
     button?: {
-      text?: string;
-      href?: string;
+      text: string;
+      href: string;
     };
   };
   render: (data: T[]) => React.ReactNode;
@@ -46,7 +45,7 @@ const StateSkeleton = ({
 }: StateSkeletonProps) => (
   <div className="mt-16 flex w-full flex-col items-center justify-center sm:mt-36">
     <>
-      <Image
+      {/* <Image
         src={image.dark}
         alt={image.alt}
         width={270}
@@ -59,11 +58,11 @@ const StateSkeleton = ({
         width={270}
         height={200}
         className="block object-contain dark:hidden"
-      />
+      /> */}
     </>
 
-    <h2 className="h2-bold text-dark200_light900 mt-8">{title}</h2>
-    <p className="body-regular text-dark500_light700 my-3.5 max-w-md text-center">
+    <h2 className="text-5xl font-bold mt-8">{title}</h2>
+    <p className="text-sm my-3.5 max-w-md text-center">
       {message}
     </p>
     {button && (
@@ -84,7 +83,7 @@ const DataRenderer = <T,>({
     title: "No data found",
     message: "No data found",
     button: {
-      text: "Button Text",
+      text: "No Data",
       href: "#",
     },
   },
@@ -98,13 +97,13 @@ const DataRenderer = <T,>({
           dark: "/images/dark-error.png",
           alt: "Error state illustration",
         }}
-        title={error?.message || "Error title"}
+        title={error?.message || empty.title}
         message={
           error?.details
             ? JSON.stringify(error.details, null, 2)
-            : "Error message"
+            : empty.message
         }
-        button={ { text: "No Data", href: "#" }}
+        // button={empty.button}
       />
     );
   }
@@ -117,9 +116,9 @@ const DataRenderer = <T,>({
           dark: "/images/dark-illustration.png",
           alt: "Empty state illustration",
         }}
-        title={ "No data found"}
-        message={ "No data found"}
-        button={ { text: "No Data", href: "#" }}
+        title={empty.title}
+        message={empty.message}
+        button={empty.button}
       />
     );
 

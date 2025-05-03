@@ -2,6 +2,7 @@
 
 import { createClient } from '@/app/utils/supabase/server';
 import { getLoggedInUser } from './auth.actions';
+import { Tag } from '@/app/types/global';
 
 interface AdTagJoinResponse {
   id: string;

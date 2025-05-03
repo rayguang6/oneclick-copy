@@ -1,5 +1,5 @@
 //response for fetch data
-type ActionResponse<T = null> = {
+export type ActionResponse<T = null> = {
     success: boolean;
     data?: T;
     error?: {
@@ -7,18 +7,19 @@ type ActionResponse<T = null> = {
       details?: Record<string, string[]>;
     };
     status?: number;
+    count?: number;
   };
 
-type SuccessResponse<T = null> = ActionResponse<T> & { success: true };
-type ErrorResponse = ActionResponse<undefined> & { success: false };
+export type SuccessResponse<T = null> = ActionResponse<T> & { success: true };
+export type ErrorResponse = ActionResponse<undefined> & { success: false };
 
-type APIErrorResponse = NextResponse<ErrorResponse>;
-type APIResponse<T = null> = NextResponse<SuccessResponse<T> | ErrorResponse>;
+export type APIErrorResponse = NextResponse<ErrorResponse>;
+export type APIResponse<T = null> = NextResponse<SuccessResponse<T> | ErrorResponse>;
 
 
 
 //props for fetching pagination
-interface PaginatedSearchParams {
+export interface PaginatedSearchParams {
     page?: number;
     pageSize?: number;
     query?: string;
@@ -27,7 +28,7 @@ interface PaginatedSearchParams {
     userId?: string;
   }
 
-  interface Ad {
+  export interface Ad {
     tags: boolean;
     id: string;
     library_id?: string;
@@ -47,7 +48,7 @@ interface PaginatedSearchParams {
     tags?: Tag[];
   }
 
-  interface Tag {
+  export interface Tag {
     id: string;
     name: string;
     color: string;

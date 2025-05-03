@@ -5,6 +5,7 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import AdTagEditor from './ads/AdTagEditor';
 import { getTagsForAd } from '../lib/actions/tags.actions';
 import { createClient } from '@/app/utils/supabase/client';
+import { Ad, Tag } from '@/app/types/global';
 
 interface AdCardProps {
     ad: Ad;
@@ -84,9 +85,9 @@ export default function AdCard({ ad }: AdCardProps) {
     };
 
     return (
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+        <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden flex flex-col h-[500px]">
             {/* Library ID and Running Time Info */}
-            <div className="p-3 border-b border-gray-200">
+            <div className="p-3 border-b border-gray-200 shrink-0">
                 <div className="text-[10px]">
                     <p className="text-gray-700">Library ID: {ad.library_id || 'N/A'}</p>
                     <p className="text-gray-700 mt-1">
@@ -96,8 +97,8 @@ export default function AdCard({ ad }: AdCardProps) {
             </div>
 
             {/* Advertiser Info */}
-            <div className="p-3 py-2 flex flex-row items-center gap-4">
-                <div className="flex items-start ">
+            <div className="p-3 py-2 flex flex-row items-center gap-4 border-b border-gray-200 shrink-0">
+                <div className="flex items-start">
                     <Avatar className='w-8 h-8 me-2'>
                         <AvatarImage src={ad.profile_image_url} />
                         <AvatarFallback className='bg-gray-200 text-gray-400'>{ad.advertiser_name?.charAt(0) || ''}</AvatarFallback>
@@ -116,10 +117,10 @@ export default function AdCard({ ad }: AdCardProps) {
             </div>
 
             {/* Ad Content */}
-            <div className="p-3 pt-0">
+            <div className="flex-1 overflow-hidden flex flex-col">
                 {/* Ad Text */}
                 {ad.ad_text && (
-                    <div>
+                    <div className="p-3 pb-2 shrink-0">
                         <p className={`text-[10px] text-gray-700 mb-1 whitespace-pre-line ${isExpanded ? '' : 'line-clamp-7'}`}>
                             {ad.ad_text}
                         </p>
@@ -139,66 +140,57 @@ export default function AdCard({ ad }: AdCardProps) {
                 )}
 
                 {/* Ad Media */}
-                {ad.media_type === 'image' ? (
-                    <img
-                        src={ad.media_url}
-                        alt="Ad content"
-                        className="w-full h-[175px] object-contain"
-                    />
-                ) : ad.media_type === 'video' ? (
-                    <div>
-                        {!showVideo ? (
-                            <div
-                                className="relative cursor-pointer group"
-                                onClick={handleThumbnailClick}
-                            >
-                                <img
-                                    src={ad.thumbnail_url ?? '/images/video-placeholder.png'}
-                                    alt="Video thumbnail"
-                                    className="w-full h-[175px] object-contain bg-gray-100"
-                                />
-                                <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-30 group-hover:bg-opacity-40 transition-opacity">
-                                    <div className="w-16 h-16 flex items-center justify-center rounded-full bg-black bg-opacity-50 group-hover:bg-opacity-70">
-                                        <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
-                                            <path d="M8 5v14l11-7z" />
-                                        </svg>
+                <div className="flex-1 min-h-0 relative">
+                    {ad.media_type === 'image' ? (
+                        <img
+                            src={ad.media_url}
+                            alt="Ad content"
+                            className="w-full h-full object-contain bg-gray-50"
+                        />
+                    ) : ad.media_type === 'video' ? (
+                        <div className="h-full">
+                            {!showVideo ? (
+                                <div
+                                    className="relative cursor-pointer group h-full"
+                                    onClick={handleThumbnailClick}
+                                >
+                                    <img
+                                        src={ad.thumbnail_url ?? '/images/video-placeholder.png'}
+                                        alt="Video thumbnail"
+                                        className="w-full h-full object-contain bg-gray-50"
+                                    />
+                                    <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-30 group-hover:bg-opacity-40 transition-opacity">
+                                        <div className="w-16 h-16 flex items-center justify-center rounded-full bg-black bg-opacity-50 group-hover:bg-opacity-70">
+                                            <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
+                                                <path d="M8 5v14l11-7z" />
+                                            </svg>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        ) : (
-                            <video
-                                ref={videoRef}
-                                src={ad.media_url}
-                                controls
-                                className="w-full h-[175px] object-contain bg-gray-100"
-                            />
-                        )}
-                        {/* Lazy load transcript UI */}
-                        {(
-                            // <VideoTranscriptUI
-                            //     adId={ad.id}
-                            //     mediaType={ad.media_type}
-                            //     initialTranscript={existingTranscript}
-                            // />
-                            <div>
-                                <p>Transcript</p>
-                            </div>
-                        )}
-                    </div>
-                ) : null}
+                            ) : (
+                                <video
+                                    ref={videoRef}
+                                    src={ad.media_url}
+                                    controls
+                                    className="w-full h-full object-contain bg-gray-50"
+                                />
+                            )}
+                        </div>
+                    ) : null}
+                </div>
             </div>
 
             {/* Tags Section */}
             <div
-                className="flex flex-wrap gap-1.5 items-center min-h-[24px] cursor-pointer hover:bg-gray-50 transition-colors p-1 rounded"
+                className="mt-auto border-t border-gray-200 flex flex-wrap gap-1.5 items-center min-h-[40px] cursor-pointer hover:bg-gray-50 transition-colors p-2 shrink-0"
                 onClick={handleTagClick}
             >
                 {adTags.length > 0 ? (
                     adTags.map((tag) => (
                         <div
                             key={tag.id}
-                            className="px-2 py-0.5 text-xs rounded"
-                            style={{ backgroundColor: tag.color || '#E5E7EB' }}
+                            className="px-2 py-0.5 text-xs rounded transition-all duration-200 hover:opacity-90"
+                            style={{ backgroundColor: tag.color }}
                         >
                             {tag.name}
                         </div>
