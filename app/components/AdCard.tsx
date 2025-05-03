@@ -7,6 +7,10 @@ import { getTagsForAd } from '../lib/actions/tags.actions';
 import { createClient } from '@/app/utils/supabase/client';
 import { Ad, Tag } from '@/app/types/global';
 import { createPortal } from 'react-dom';
+import { Button } from "@/components/ui/button";
+import { Collapsible, CollapsibleTrigger, CollapsibleContent } from "@/components/ui/collapsible";
+import { ChevronDown } from "lucide-react";
+import VideoTranscriptUI from './VideoTranscriptUI';
 
 interface AdCardProps {
     ad: Ad;
@@ -25,6 +29,7 @@ export default function AdCard({ ad, readOnly = false }: AdCardProps) {
     const [showTagEditor, setShowTagEditor] = useState(false);
     const [userId, setUserId] = useState<string | null>(null);
     const modalRef = useRef<HTMLDivElement>(null);
+    const [isTranscriptOpen, setIsTranscriptOpen] = useState(false);
 
     // Load tags data
     const loadTags = useCallback(async () => {
@@ -309,13 +314,12 @@ export default function AdCard({ ad, readOnly = false }: AdCardProps) {
                                     <p className="whitespace-pre-wrap text-gray-700">{ad.ad_text}</p>
                                 </div>
 
-                                {/* Transcription if available */}
-                                {existingTranscript && (
-                                    <div className="mb-6">
-                                        <h4 className="font-medium mb-2">Transcription</h4>
-                                        <p className="text-sm text-gray-600 whitespace-pre-wrap">{existingTranscript}</p>
-                                    </div>
-                                )}
+                                {/* Video Transcript UI */}
+                                <VideoTranscriptUI
+                                    adId={ad.id}
+                                    mediaType={ad.media_type}
+                                    initialTranscript={existingTranscript}
+                                />
 
                                 {/* Tags Section */}
                                 <div className="border-t pt-4">
