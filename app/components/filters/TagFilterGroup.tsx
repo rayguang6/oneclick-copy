@@ -17,98 +17,120 @@ interface HomeFilterProps {
 const HomeFilter = ({ userId }: HomeFilterProps) => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const filterParams = searchParams.get("filter");
-  const [active, setActive] = useState(filterParams || "");
   const [filters, setFilters] = useState<Tag[]>([]);
+  const [active, setActive] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
-  const previousFilter = useRef(filterParams || "");
 
   useEffect(() => {
-    const loadTags = async () => {
-      const tags = await getTagsForUser(userId);
-      setFilters(tags);
+    const loadFilters = async () => {
+      try {
+        const tags = await getTagsForUser(userId);
+        setFilters(tags);
+      } catch (error) {
+        console.error('Error loading filters:', error);
+      }
     };
-    loadTags();
+
+    if (userId) {
+      loadFilters();
+    }
   }, [userId]);
 
-  // Keep active state in sync with URL
   useEffect(() => {
-    if (filterParams !== previousFilter.current) {
-      setActive(filterParams || "");
-      previousFilter.current = filterParams || "";
-    }
-  }, [filterParams]);
+    const filterValue = searchParams.get('filter');
+    setActive(filterValue || '');
+  }, [searchParams]);
 
-  const handleTypeClick = (filter: string) => {
-    // If already processing a click, ignore this one
+  const handleTypeClick = useCallback(
+    (tagId: string) => {
+      if (isProcessing) return;
+      setIsProcessing(true);
+
+      let newUrl;
+      if (active === tagId) {
+        // If clicking active filter, remove it
+        newUrl = removeKeysFromUrlQuery({
+          params: searchParams.toString(),
+          keysToRemove: ['filter', 'page'],
+        });
+        setActive('');
+      } else {
+        // Set new filter
+        newUrl = formUrlQuery({
+          params: searchParams.toString(),
+          key: 'filter',
+          value: tagId,
+        });
+        setActive(tagId);
+      }
+
+      router.push(newUrl);
+      setIsProcessing(false);
+    },
+    [active, isProcessing, router, searchParams]
+  );
+
+  const handleClearFilters = useCallback(() => {
     if (isProcessing) return;
-    
-    // If the filter hasn't actually changed, don't do anything
-    if (filter === previousFilter.current) return;
-    
     setIsProcessing(true);
-    let newUrl = "";
 
-    if (filter === active) {
-      setActive("");
-      newUrl = removeKeysFromUrlQuery({
-        params: searchParams.toString(),
-        keysToRemove: ["filter", "page"],
-      });
-    } else {
-      setActive(filter);
-      const paramsWithoutPage = removeKeysFromUrlQuery({
-        params: searchParams.toString(),
-        keysToRemove: ["page"],
-      });
-      newUrl = formUrlQuery({
-        params: paramsWithoutPage,
-        key: "filter",
-        value: filter,
-      });
-    }
+    const newUrl = removeKeysFromUrlQuery({
+      params: searchParams.toString(),
+      keysToRemove: ['filter', 'page'],
+    });
 
-    // Add a small delay before processing the next click
-    setTimeout(() => {
-      router.push(newUrl, { scroll: false });
-      previousFilter.current = filter === active ? "" : filter;
-      setTimeout(() => {
-        setIsProcessing(false);
-      }, 300); // Allow new clicks after 300ms
-    }, 100); // Push URL after 100ms
-  };
+    setActive('');
+    router.push(newUrl);
+    setIsProcessing(false);
+  }, [isProcessing, router, searchParams]);
 
   return (
-    <div className="mt-10 hidden flex-wrap gap-3 sm:flex">
-      {filters.map((filter) => (
-        <button key={filter.id}
-          onClick={() => handleTypeClick(filter.id)}
-          disabled={isProcessing}
-          className={`
-            px-4 py-1.5 rounded-md text-sm font-medium
-            transition-all duration-200 ease-in-out
-            ${isProcessing ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'}
-            ${active === filter.id 
-              ? 'shadow-sm' 
-              : 'hover:opacity-80'
-            }
-          `}
-          style={{
-            backgroundColor: active === filter.id 
-              ? 'white' 
-              : `${filter.color}`,
-            color: active === filter.id 
-              ? '#000'
-              : '#000',
-            border: `2px solid ${active === filter.id ? filter.color : 'transparent'}`,
-          }}
-        >
-          {filter.name}
-          {active === filter.id && (
-            <span className="ml-1.5">✓</span>
-          )}
-        </button>
-      ))}
+    <div className="mt-10 flex flex-col gap-3 sm:flex">
+      <div className="flex flex-wrap items-center gap-3">
+        {filters.map((filter) => (
+          <button key={filter.id}
+            onClick={() => handleTypeClick(filter.id)}
+            disabled={isProcessing}
+            className={`
+              px-4 py-1.5 rounded-md text-sm font-medium
+              transition-all duration-200 ease-in-out
+              ${isProcessing ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'}
+              ${active === filter.id 
+                ? 'shadow-sm' 
+                : 'hover:opacity-80'
+              }
+            `}
+            style={{
+              backgroundColor: active === filter.id 
+                ? 'white' 
+                : `${filter.color}`,
+              color: active === filter.id 
+                ? '#000'
+                : '#000',
+              border: `2px solid ${active === filter.id ? filter.color : 'transparent'}`,
+            }}
+          >
+            {filter.name}
+            {active === filter.id && (
+              <span className="ml-1.5">✓</span>
+            )}
+          </button>
+        ))}
+        
+        {active && (
+          <button
+            onClick={handleClearFilters}
+            disabled={isProcessing}
+            className={`
+              px-4 py-1.5 rounded-md text-sm font-medium bg-gray-100
+              transition-all duration-200 ease-in-out hover:bg-gray-200
+              ${isProcessing ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'}
+            `}
+          >
+            Clear Filter
+          </button>
+        )}
+      </div>
     </div>
   );
 };

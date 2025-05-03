@@ -42,7 +42,10 @@ export default async function AdsPage({ searchParams }: SearchParams) {
     user.id
   );
 
-  const { ads, isNext, count } = data || {};
+  const { ads, count } = data || {};
+  
+  // Calculate total pages
+  const totalPages = Math.ceil((count || 0) / currentPageSize);
 
   // Construct search context message
   const searchContext = () => {
@@ -113,7 +116,7 @@ export default async function AdsPage({ searchParams }: SearchParams) {
       {/* Pagination */}
       <Pagination
         page={currentPage.toString()}
-        isNext={isNext || false}
+        totalPages={totalPages}
         containerClasses="container mx-auto mb-4"
       />
     </div>
