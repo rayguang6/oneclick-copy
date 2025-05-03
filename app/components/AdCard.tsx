@@ -10,7 +10,7 @@ import { createPortal } from 'react-dom';
 import { Button } from "@/components/ui/button";
 import { Collapsible, CollapsibleTrigger, CollapsibleContent } from "@/components/ui/collapsible";
 import { ChevronDown } from "lucide-react";
-import VideoTranscriptUI from './VideoTranscriptUI';
+import VideoTranscriptUI from './ads/VideoTranscriptUI';
 
 interface AdCardProps {
     ad: Ad;
@@ -131,7 +131,7 @@ export default function AdCard({ ad, readOnly = false }: AdCardProps) {
     const handleSwipeClick = (e: React.MouseEvent) => {
         e.stopPropagation();
         // Add your swipe functionality here
-        console.log('Swipe clicked');
+        console.log('Alert' );
     };
 
     // Auto-play video when modal opens
@@ -182,12 +182,7 @@ export default function AdCard({ ad, readOnly = false }: AdCardProps) {
                                 </p>
                                 <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-white to-transparent" />
                             </div>
-                            <button
-                                onClick={handleSwipeClick}
-                                className="mb-2 text-[10px] bg-green-700 text-white px-2 py-1 rounded-sm cursor-pointer hover:bg-green-800 transition-colors"
-                            >
-                                Swipe This Ad
-                            </button>
+                            
                         </div>
                     )}
 
@@ -244,7 +239,10 @@ export default function AdCard({ ad, readOnly = false }: AdCardProps) {
                 </div>
             </div>
 
-            {/* Modal */}
+
+{/* ****************************************************** */}
+            {/* Modal POPUP*/}
+{/* ****************************************************** */}
             {isModalOpen && createPortal(
                 <div className="fixed inset-0 z-50 flex items-center justify-center">
                     {/* Backdrop */}
@@ -311,7 +309,16 @@ export default function AdCard({ ad, readOnly = false }: AdCardProps) {
 
                                 {/* Ad Text */}
                                 <div className="prose max-w-none mb-6">
+                                    
                                     <p className="whitespace-pre-wrap text-gray-700">{ad.ad_text}</p>
+                                    <button
+                                        onClick={handleSwipeClick}
+                                        className="text-[10px] bg-green-700 mt-4 text-white px-6 py-3 rounded-sm cursor-pointer hover:bg-green-800 transition-colors"
+                                    >
+                                        <p className='text-lg'>
+                                            ✏️ Swipe & Rewrite Ads
+                                        </p>
+                                    </button>
                                 </div>
 
                                 {/* Video Transcript UI */}

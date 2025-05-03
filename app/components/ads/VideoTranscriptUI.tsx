@@ -2,9 +2,8 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { getVideoTranscript } from '@/app/lib/actions/transcript.actions';
-// import { getUserProjects } from '@/app/lib/actions/project.actions';
-import CreditIcon from '@/app/components/icons/CreditIcon';
-
+import { getUserProjects } from '@/app/lib/actions/project.actions';
+import CreditIcon from '@/app/components/ui/CreditIcon';
 
 interface VideoTranscriptUIProps {
   adId: string;
@@ -16,16 +15,14 @@ export default function VideoTranscriptUI({ adId, mediaType, initialTranscript =
   const [transcript, setTranscript] = useState<string | null>(initialTranscript);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  // Always start with transcript closed
   const [isOpen, setIsOpen] = useState(false);
   const transcriptRef = useRef<HTMLDivElement>(null);
   const hasTranscript = !!transcript;
-  // Log initial state for debugging
+
+  //todo  this might not needed useeffect?
   useEffect(() => {
-    // console.log(`VideoTranscriptUI for ad ${adId}: initialTranscript=${!!initialTranscript}, transcript=${!!transcript}, isOpen=${isOpen}`);
     if (transcript) {
-      console.log(`Transcript content exists, length: ${transcript.length}`);
-      // No longer auto-opening transcript when it becomes available
+      // console.log(`Transcript content exists, length: ${transcript.length}`);
     }
   }, [adId, initialTranscript, transcript, isOpen]);
 
@@ -44,14 +41,12 @@ export default function VideoTranscriptUI({ adId, mediaType, initialTranscript =
   }, []);
 
   const handleGetTranscript = async () => {
-    // If transcript already exists, just toggle visibility
     if (hasTranscript) {
       console.log(`Toggling transcript visibility from ${isOpen} to ${!isOpen}`);
       setIsOpen(!isOpen);
       return;
     }
     
-    // Otherwise, fetch the transcript
     setIsLoading(true);
     setError(null);
     console.log(`Fetching transcript for ad ${adId}`);
@@ -65,7 +60,6 @@ export default function VideoTranscriptUI({ adId, mediaType, initialTranscript =
       } else {
         console.log(`Received transcript: ${response.text ? 'yes' : 'no'}, length: ${response.text?.length || 0}`);
         setTranscript(response.text);
-        // Auto-open when first fetched
         setIsOpen(true);
       }
     } catch (err) {
@@ -76,66 +70,56 @@ export default function VideoTranscriptUI({ adId, mediaType, initialTranscript =
     }
   };
 
-//   const handleRegenerateButtonClick = async () => {
-//     if (!transcript) {
-//       alert('No transcript available to generate content');
-//       return;
-//     }
+  //function to swipe and clone this to project chat
+  const handleRegenerateButtonClick = async () => {
+    if (!transcript) {
+      alert('No transcript available to generate content');
+      return;
+    }
     
-//     try {
-//       // Get the latest project ID dynamically
-//       const projects = await getUserProjects();
-//       if (!projects || projects.length === 0) {
-//         alert('No projects found. Please create a project first.');
-//         return;
-//       }
+    try {
+      const projects = await getUserProjects();
+      if (!projects || projects.length === 0) {
+        alert('No projects found. Please create a project first.');
+        return;
+      }
       
-//       const latestProject = projects[0];
+      const latestProject = projects[0];
+      const timestamp = new Date().getTime();
+      const storageKey = `transcript_for_generation_${timestamp}`;
       
-//       // Store transcript in localStorage with a timestamp
-//       const timestamp = new Date().getTime();
-//       const storageKey = `transcript_for_generation_${timestamp}`;
+      localStorage.setItem(storageKey, transcript);
+      localStorage.setItem('latest_transcript_key', storageKey);
       
-//       localStorage.setItem(storageKey, transcript);
-//       localStorage.setItem('latest_transcript_key', storageKey);
+      const TRANSCRIPT_FRAMEWORK = 'cdc6d49e-9474-48aa-9efb-4095710ad011';
+      const url = `/project/${latestProject.id}/tool/regenerate-ads?framework=${TRANSCRIPT_FRAMEWORK}&ts=${timestamp}&autogenerate=true`;
       
-//       // Use transcript framework ID
-//       const TRANSCRIPT_FRAMEWORK = 'cdc6d49e-9474-48aa-9efb-4095710ad011';
-      
-//       // Create URL with framework ID and timestamp
-//       const url = `/project/${latestProject.id}/tool/regenerate-ads?framework=${TRANSCRIPT_FRAMEWORK}&ts=${timestamp}&autogenerate=true`;
-      
-//       // Open the tool page
-//       window.open(url, '_blank');
-//     } catch (err) {
-//       console.error('Error:', err);
-//       alert(`Failed to open content generator: ${err instanceof Error ? err.message : 'Unknown error'}`);
-//     }
-//   };
+      window.open(url, '_blank');
+    } catch (err) {
+      console.error('Error:', err);
+      alert(`Failed to open content generator: ${err instanceof Error ? err.message : 'Unknown error'}`);
+    }
+  };
 
-  // Function to close the transcript
   const closeTranscript = () => {
-    console.log('Explicitly closing transcript');
+    // console.log('Explicitly closing transcript');
     setIsOpen(false);
   };
   
-  // Function to toggle transcript visibility
   const toggleTranscript = () => {
-    console.log(`Toggling transcript from ${isOpen} to ${!isOpen}`);
+    // console.log(`Toggling transcript from ${isOpen} to ${!isOpen}`);
     setIsOpen(!isOpen);
   };
 
-  // Only render for videos
   if (mediaType !== 'video') {
     return null;
   }
 
-  // Determine button state text
   const buttonText = isLoading
     ? "Processing..."
     : hasTranscript
       ? (isOpen ? "Hide transcript" : "Show transcript")
-      : "Generate Video transcript (1 credit)";
+      : "1 Generate Video transcript";
 
   return (
     <div className="relative mt-2" ref={transcriptRef}>
@@ -144,7 +128,7 @@ export default function VideoTranscriptUI({ adId, mediaType, initialTranscript =
         onClick={hasTranscript ? toggleTranscript : handleGetTranscript}
         disabled={isLoading}
         className={`
-          flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded
+          flex items-center gap-1.5 text-xs font-medium px-6 cursor-pointer py-3 rounded
           ${isLoading
             ? 'bg-gray-200 text-gray-500 cursor-wait'
             : hasTranscript
@@ -179,34 +163,31 @@ export default function VideoTranscriptUI({ adId, mediaType, initialTranscript =
           </>
         ) : (
           <>
-            <CreditIcon className="w-3 h-3 text-blue-700 mr-1" fillColor="currentColor" />
+            <CreditIcon className="w-3 h-3 text-purple-700 mr-1" fillColor="currentColor" />
             {buttonText}
           </>
         )}
       </button>
       
-      {/* Error Message */}
       {error && (
         <div className="mt-2 text-xs text-red-500">
           {error}
         </div>
       )}
       
-      {/* Debug info */}
       {process.env.NODE_ENV === 'development' && (
         <div className="mt-1 text-xs text-gray-400">
           isOpen: {isOpen ? 'true' : 'false'}, hasTranscript: {hasTranscript ? 'true' : 'false'}
         </div>
       )}
       
-      {/* Transcript Text - Simple Inline Display */}
       {hasTranscript && isOpen && (
         <div className="mt-2 p-3 rounded-md border border-gray-200 bg-gray-50 text-xs text-gray-700 whitespace-pre-line">
           <div className="flex justify-between items-center mb-2">
             <h3 className="text-xs font-semibold text-gray-700">Video Transcript</h3>
             <div className="flex gap-2">
               <button
-                // onClick={handleRegenerateButtonClick}
+                onClick={handleRegenerateButtonClick}
                 className="text-xs bg-green-700 text-white px-2 py-1 rounded-sm cursor-pointer"
               >
                 Swipe This Script
@@ -237,4 +218,4 @@ export default function VideoTranscriptUI({ adId, mediaType, initialTranscript =
       )}
     </div>
   );
-}
+} 
