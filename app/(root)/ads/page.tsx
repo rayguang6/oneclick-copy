@@ -53,7 +53,7 @@ export default async function AdsPage({ searchParams }: SearchParams) {
           />
         </section>
 
-        <HomeFilter />
+        <HomeFilter /> 
 
         {/* Ads List Section */}
         <DataRenderer
