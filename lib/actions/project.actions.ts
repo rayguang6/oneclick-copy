@@ -1,8 +1,11 @@
 "use server";
 
-import handleServerError from "@/lib/handlers/error";
+import handleError from "@/lib/handlers/error";
 import { createClient } from "@/app/utils/supabase/server";
 import logger from "../logger";
+import { cache } from "react";
+import action from "../handlers/action";
+import { GetProjectSchema } from "../validations";
 export type ResponseType = "api" | "server";
 
 
@@ -17,7 +20,7 @@ export async function getProjects(params: PaginatedSearchParams): Promise<Action
   projects: Project[];
   // isNext: boolean;
 }>
->{
+> {
 
   const { page = 1, pageSize = 10, query, filter } = params;
 
@@ -25,7 +28,7 @@ export async function getProjects(params: PaginatedSearchParams): Promise<Action
   const limit = pageSize;
 
   let sortCriteria = {};
-  
+
   const supabase = await createClient()
   const currentUser = await supabase.auth.getUser()
 
@@ -44,21 +47,68 @@ export async function getProjects(params: PaginatedSearchParams): Promise<Action
         projects: projects.data ?? [],
       },
     };
-    
+
   } catch (error) {
-    return handleServerError(error) as ErrorResponse;
+    return handleError(error) as ErrorResponse;
+  }
+}
 
 
-    // logger.error({ err: error }, "An unexpected error occurred");
-    // return {
-    //   success: false,
-    //   error: {
-    //     message: "SERVER Error",
-    //   },
-    // };
-    
+// export const getProjectById = cache(async function getProjectById(
+//   params: GetProjectParams
+// ): Promise<ActionResponse<Project>> {
 
+//   const { projectId } = params;
+  
+//   try {
+//     const supabase = await createClient()
+//     const currentUser = await supabase.auth.getUser()
+
+//     const project = await supabase
+//       .from('projects')
+//       .select('*')
+//       .eq('id', projectId)
+//       .single();
+
+//     if (!project) throw new Error("Project not found");
+
+//     return { success: true, data: JSON.parse(JSON.stringify(project)) };
+//   } catch (error) {
+//     return handleError(error) as ErrorResponse;
+//   }    
+// })
+
+
+
+
+// Example of getQuestion function using the reusable action
+export const getProject = cache(async function getProject(
+  params: GetProjectParams
+): Promise<ActionResponse<Project>> {
+  const actionResult = await action({
+    params,
+    schema: GetProjectSchema,
+  });
+
+  if (actionResult instanceof Error) {
+    return handleError(actionResult) as ErrorResponse;
   }
 
- 
-}
+  const { projectId } = actionResult.params!;
+  const { supabase } = actionResult;
+
+  try {
+    const project = await supabase
+      .from('projects')
+      .select('*')
+      .eq('id', projectId)
+      .single();
+
+    if (!project) throw new Error("Project not found");
+
+
+    return { success: true, data: project.data };
+  } catch (error) {
+    return handleError(error) as ErrorResponse;
+  }
+});
