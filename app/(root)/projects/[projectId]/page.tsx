@@ -1,6 +1,11 @@
+import DataRenderer from '@/app/components/DataRenderer';
+import ProjectCard from '@/app/components/projects/ProjectCard';
 import ProjectDetailsSection from '@/app/components/projects/ProjectDetailsSection';
+import ToolCard from '@/app/components/tools/ToolCard';
 import { ROUTES } from '@/constants/routes';
-import { getProject } from '@/lib/actions/project.actions';
+import { EMPTY_PROJECTS, EMPTY_TOOLS } from '@/constants/states';
+import { getProject } from '@/lib/actions/projects.actions';
+import { getTools } from '@/lib/actions/tools.actions';
 import Link from 'next/link';
 import React from 'react';
 
@@ -28,8 +33,15 @@ const ProjectDetails = async ({ params, searchParams }: RouteParams) => {
     case_study 
   } = project;
 
+  const { success: successGetTools, data: toolsData, error: errorGetTools } = await getTools({  
+    // page: Number(page) || 1,
+    // pageSize: Number(pageSize) || 10,
+    // query,
+    // filter,
+  });
+
   return (
-    <div className="mx-auto p-6">
+    <div className="mx-auto">
       {/* Header with back button */}
       <div className="mb-8">
         <Link 
@@ -43,21 +55,39 @@ const ProjectDetails = async ({ params, searchParams }: RouteParams) => {
       
       {/* Project details card */}
       <ProjectDetailsSection project={project} /> 
+
+      {/* Tools Section */}
+
+      <div className="my-8">
+      <h2 className="text-2xl font-semibold text-gray-800 flex items-center gap-2 mb-6">
+        <span className="text-blue-500">🛠</span> AI Tools
+        <span className="ml-2 text-sm font-normal text-gray-500 bg-gray-100 px-2 py-0.5 rounded">Click to generate content</span>
+      </h2>
       
+        
+      <DataRenderer
+          success={successGetTools}
+          error={errorGetTools}
+          data={toolsData?.tools}
+        empty={EMPTY_TOOLS}
+        render={(tools) => (
+          <>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            {tools.map((tool) => (
+              <ToolCard key={tool.id} tool={tool} projectId={projectId} />
+            ))}
+          </div>
+          </>
+        )}
+      />
+      </div>
     </div>
+
+      
+
+    
   );
 };
 
-// Helper component for consistent detail items
-const DetailItem = ({ label, value }: { label: string; value: string | null | undefined }) => {
-  if (!value) return null;
-  
-  return (
-    <div className="border-b border-gray-200 pb-4 last:border-b-0 last:pb-0">
-      <h2 className="text-sm font-semibold text-gray-600 mb-1">{label}</h2>
-      <p className="text-gray-800 whitespace-pre-line">{value}</p>
-    </div>
-  );
-};
 
 export default ProjectDetails;

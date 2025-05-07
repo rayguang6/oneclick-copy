@@ -1,5 +1,5 @@
 import { ROUTES } from "@/constants/routes";
-import AdCard from "../../components/AdCard";
+import AdCard from "../../components/ads/AdCard";
 import { getAds } from "../../../lib/actions/ads.actions";
 import LocalSearch from "@/app/components/search/LocalSearch";
 import DataRenderer from "@/app/components/DataRenderer";

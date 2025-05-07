@@ -1,5 +1,5 @@
-
 import { ROUTES } from "@/constants/routes";
+
 
 export const DEFAULT_EMPTY = {
   title: "No Data Found",
@@ -20,8 +20,6 @@ export const DEFAULT_ERROR = {
   },
 };
 
-
-
 export const EMPTY_PROJECTS = {
   title: "No Projects Found",
   message:
@@ -30,10 +28,4 @@ export const EMPTY_PROJECTS = {
     text: "Create Project",
     href: ROUTES.HOME,
   },
-};
-
-export const EMPTY_TOOLS = {
-  title: "No Tools Found",
-  message:
-    "The tool board is empty. Make it rain with your brilliant tool.",
 };

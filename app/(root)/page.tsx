@@ -1,4 +1,4 @@
-import { getProjects } from "../../lib/actions/project.actions";
+import { getProjects } from "../../lib/actions/projects.actions";
 import DataRenderer from "../components/DataRenderer";
 import { EMPTY_PROJECTS } from "@/constants/states";
 import ProjectCard from "../components/projects/ProjectCard";

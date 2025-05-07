@@ -75,16 +75,21 @@ interface Project {
 }
 
 
-// Project form data (used for creating/updating)
-interface ProjectFormData {
+interface Tool {
+  id: string;
+  title: string;
+  slug: string;
+  icon: string;
+  description: string;
+}
+
+interface Framework{
+  id: string
+  tool_id: string
   name: string
-  industry: string,
-  guru_details: string,
-  audience: string,
-  painpoints: string,
-  product: string,
-  usp: string,
-  competitor: string,
-  student_transformation: string,
-  case_study: string;
+  description: string
+  system_prompt: string
+  image: string
+  is_default: boolean
+  created_at: string
 }

@@ -2,12 +2,12 @@
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useState, useEffect, useCallback, useRef } from 'react';
-import AdTagEditor from './ads/AdTagEditor';
-import { getTagsForAd } from '../../lib/actions/tags.actions';
+import AdTagEditor from './AdTagEditor';
+import { getTagsForAd } from '../../../lib/actions/tags.actions';
 import { createClient } from '@/app/utils/supabase/client';
 
 import { createPortal } from 'react-dom';
-import VideoTranscriptUI from './ads/VideoTranscriptUI';
+import VideoTranscriptUI from './VideoTranscriptUI';
 
 interface AdCardProps {
     ad: Ad;
