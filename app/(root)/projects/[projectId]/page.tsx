@@ -5,13 +5,13 @@ import Link from 'next/link';
 import React from 'react';
 
 type RouteParams = {
-  params: { id: string };
+  params: { projectId: string };
   searchParams: { page?: string; pageSize?: string; filter?: string };
 };
 
 const ProjectDetails = async ({ params, searchParams }: RouteParams) => {
-  const { id } = params;
-  const { success, data: project } = await getProject({ projectId: id });
+  const { projectId } = await params;
+  const { success, data: project } = await getProject({ projectId });
 
   if (!project) return <div className="p-8 text-center">Project not found</div>;
   

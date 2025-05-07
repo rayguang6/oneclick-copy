@@ -4,7 +4,7 @@ export const ROUTES = {
     HOME: '/',
     ADS_LIBRARY: '/ads',
     REEVE_COLLECTION: '/reeve-collection',
-    PROJECT: (id: string) => `/projects/${id}`,
+    PROJECT: (projectId: string) => `/projects/${projectId}`,
     PROFILE: (id: string) => `/profile/${id}`,
   }
   

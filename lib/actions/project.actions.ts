@@ -107,6 +107,7 @@ export const getProject = cache(async function getProject(
     if (!project) throw new Error("Project not found");
 
 
+
     return { success: true, data: project.data };
   } catch (error) {
     return handleError(error) as ErrorResponse;
