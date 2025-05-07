@@ -6,7 +6,7 @@ import {
   updateTag as updateTagAction, 
   deleteTag as deleteTagAction,
   forceDeleteTagWithCascade
-} from '@/app/lib/actions/tags.actions';
+} from '@/lib/actions/tags.actions';
 
 // Add caching to prevent unnecessary refetches
 let cachedTags: Tag[] | null = null;

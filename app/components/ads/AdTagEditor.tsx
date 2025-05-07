@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, KeyboardEvent } from 'react';
 import { createPortal } from 'react-dom';
-import { getAllTags, getTagsForAd, tagAd, untagAd as removeTagFromAd } from '@/app/lib/actions/tags.actions';
+import { getAllTags, getTagsForAd, tagAd, untagAd as removeTagFromAd } from '@/lib/actions/tags.actions';
 import { useTagStore } from '@/app/store/tagStore';
 import { TAG_COLORS } from '@/app/constants/colors';
 import { Tag } from '@/app/types/global';

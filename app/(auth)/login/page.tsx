@@ -1,5 +1,5 @@
 import AuthForm from '@/app/components/auth/AuthForm'
-import { login } from '../../lib/actions/auth.actions'
+import { login } from '../../../lib/actions/auth.actions'
 import Image from 'next/image'
 
 export default function LoginPage() {

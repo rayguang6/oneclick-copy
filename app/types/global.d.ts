@@ -1,89 +1,90 @@
-//response for fetch data
-export type ActionResponse<T = null> = {
-    success: boolean;
-    data?: T;
-    error?: {
-      message: string;
-      details?: Record<string, string[]>;
-    };
-    status?: number;
-    count?: number;
+type ActionResponse<T = null> = {
+  success: boolean;
+  data?: T;
+  error?: {
+    message: string;
+    details?: Record<string, string[]>;
   };
+  status?: number;
+};
 
-export type SuccessResponse<T = null> = ActionResponse<T> & { success: true };
-export type ErrorResponse = ActionResponse<undefined> & { success: false };
+type SuccessResponse<T = null> = ActionResponse<T> & { success: true };
+type ErrorResponse = ActionResponse<undefined> & { success: false };
 
-export type APIErrorResponse = NextResponse<ErrorResponse>;
-export type APIResponse<T = null> = NextResponse<SuccessResponse<T> | ErrorResponse>;
+type APIErrorResponse = NextResponse<ErrorResponse>;
+type APIResponse<T = null> = NextResponse<SuccessResponse<T> | ErrorResponse>;
 
-
+interface RouteParams {
+  params: Promise<Record<string, string>>;
+  searchParams: Promise<Record<string, string>>;
+}
 
 //props for fetching pagination
-export interface PaginatedSearchParams {
-    page?: number;
-    pageSize?: number;
-    query?: string;
-    filter?: string;
-    sort?: string;
-    userId?: string;
-  }
+interface PaginatedSearchParams {
+  page?: number;
+  pageSize?: number;
+  query?: string;
+  filter?: string;
+  sort?: string;
+  userId?: string;
+}
 
-  export interface Ad {
-    tags: boolean;
-    id: string;
-    library_id?: string;
-    started_running_on?: string;
-    advertiser_profile_image?: string;
-    profile_image_url?: string;
-    advertiser_profile_link?: string;
-    advertiser_name?: string;
-    ad_text?: string;
-    media_type?: string;
-    media_url?: string;
-    thumbnail_url?: string;
-    captured_at?: string;
-    created_at?: string;
-    user_id?: string;
-    transcription?: string;
-    tags?: Tag[];
-  }
+interface Ad {
+  tags: boolean;
+  id: string;
+  library_id?: string;
+  started_running_on?: string;
+  advertiser_profile_image?: string;
+  profile_image_url?: string;
+  advertiser_profile_link?: string;
+  advertiser_name?: string;
+  ad_text?: string;
+  media_type?: string;
+  media_url?: string;
+  thumbnail_url?: string;
+  captured_at?: string;
+  created_at?: string;
+  user_id?: string;
+  transcription?: string;
+  tags?: Tag[];
+}
 
-  export interface Tag {
-    id: string;
-    name: string;
-    color: string;
-    created_at: string;
-    updated_at?: string;
-  }
+interface Tag {
+  id: string;
+  name: string;
+  color: string;
+  created_at: string;
+  updated_at?: string;
+}
 
-  export interface Project {
-    id: string
-    user_id: string
-    created_at: string
-    updated_at: string
-    name: string 
-    industry: string,
-    guru_details: string,
-    audience: string,
-    painpoints: string,
-    product: string,
-    usp: string,
-    competitor: string,
-    student_transformation: string,
-    case_study: string;
-  }
-  
-  
-  // Project form data (used for creating/updating)
-  export interface ProjectFormData {
-    name: string
-    industry: string,
-    guru_details: string,
-    audience: string,
-    painpoints: string,
-    product: string,
-    usp: string,
-    competitor: string,
-    student_transformation: string,
-    case_study: string;
-  }
+interface Project {
+  id: string
+  user_id: string
+  created_at: string
+  updated_at: string
+  name: string 
+  industry: string,
+  guru_details: string,
+  audience: string,
+  painpoints: string,
+  product: string,
+  usp: string,
+  competitor: string,
+  student_transformation: string,
+  case_study: string;
+}
+
+
+// Project form data (used for creating/updating)
+interface ProjectFormData {
+  name: string
+  industry: string,
+  guru_details: string,
+  audience: string,
+  painpoints: string,
+  product: string,
+  usp: string,
+  competitor: string,
+  student_transformation: string,
+  case_study: string;
+}

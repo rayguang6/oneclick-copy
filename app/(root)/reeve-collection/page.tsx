@@ -1,12 +1,12 @@
 import { ROUTES } from "@/app/constants/routes";
 import AdCard from "../../components/AdCard";
-import { getAds } from "../../lib/actions/ads.actions";
+import { getAds } from "../../../lib/actions/ads.actions";
 import LocalSearch from "@/app/components/search/LocalSearch";
 import DataRenderer from "@/app/components/DataRenderer";
 import Pagination from "@/app/components/Pagination";
 import TagFilterGroup from "@/app/components/filters/TagFilterGroup";
 import type { Ad } from "@/app/types/global";
-import { getTagsForUser } from "@/app/lib/actions/tags.actions";
+import { getTagsForUser } from "@/lib/actions/tags.actions";
 
 interface SearchParams {
   searchParams: Promise<{ [key: string]: string }>;

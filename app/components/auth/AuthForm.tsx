@@ -1,5 +1,5 @@
 import React from 'react'
-import { login } from '../../lib/actions/auth.actions'
+import { login } from '../../../lib/actions/auth.actions'
 
 const AuthForm = () => {
   return (

@@ -1,13 +1,14 @@
 // constants/routes.js
 
 export const ROUTES = {
-    ROOT: '/',
+    HOME: '/',
     ADS_LIBRARY: '/ads',
     REEVE_COLLECTION: '/reeve-collection',
+    PROJECT: (id: string) => `/projects/${id}`,
   }
   
   export const NAV_LINKS = [
-    { href: ROUTES.ROOT, label: 'Home' },
+    { href: ROUTES.HOME, label: 'Home' },
     { href: ROUTES.ADS_LIBRARY, label: 'My Ads' },
     { href: ROUTES.REEVE_COLLECTION, label: "Reeve's Collection" },
 ]

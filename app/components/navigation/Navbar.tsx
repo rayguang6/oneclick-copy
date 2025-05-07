@@ -34,7 +34,7 @@ const Navbar = () => {
     }`}>
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
         {/* Logo */}
-        <Link href={ROUTES.ROOT} className="flex items-center gap-2 group">
+        <Link href={ROUTES.HOME} className="flex items-center gap-2 group">
           <Image 
             src="/images/logo.png" 
             alt="One Click Copy" 

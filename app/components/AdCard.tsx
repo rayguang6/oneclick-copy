@@ -3,7 +3,7 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useState, useEffect, useCallback, useRef } from 'react';
 import AdTagEditor from './ads/AdTagEditor';
-import { getTagsForAd } from '../lib/actions/tags.actions';
+import { getTagsForAd } from '../../lib/actions/tags.actions';
 import { createClient } from '@/app/utils/supabase/client';
 import { Ad, Tag } from '@/app/types/global';
 import { createPortal } from 'react-dom';

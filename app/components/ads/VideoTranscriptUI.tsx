@@ -1,8 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import { getVideoTranscript } from '@/app/lib/actions/transcript.actions';
-import { getUserProjects } from '@/app/lib/actions/project.actions';
+import { getVideoTranscript } from '@/lib/actions/transcript.actions';
 import CreditIcon from '@/app/components/ui/CreditIcon';
 
 interface VideoTranscriptUIProps {
