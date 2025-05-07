@@ -7,9 +7,6 @@ import { getTagsForAd } from '../lib/actions/tags.actions';
 import { createClient } from '@/app/utils/supabase/client';
 import { Ad, Tag } from '@/app/types/global';
 import { createPortal } from 'react-dom';
-import { Button } from "@/components/ui/button";
-import { Collapsible, CollapsibleTrigger, CollapsibleContent } from "@/components/ui/collapsible";
-import { ChevronDown } from "lucide-react";
 import VideoTranscriptUI from './ads/VideoTranscriptUI';
 
 interface AdCardProps {

@@ -71,35 +71,35 @@ export default function VideoTranscriptUI({ adId, mediaType, initialTranscript =
   };
 
   //function to swipe and clone this to project chat
-  const handleRegenerateButtonClick = async () => {
-    if (!transcript) {
-      alert('No transcript available to generate content');
-      return;
-    }
+  // const handleRegenerateButtonClick = async () => {
+  //   if (!transcript) {
+  //     alert('No transcript available to generate content');
+  //     return;
+  //   }
     
-    try {
-      const projects = await getUserProjects();
-      if (!projects || projects.length === 0) {
-        alert('No projects found. Please create a project first.');
-        return;
-      }
+  //   try {
+  //     const projects = await getUserProjects();
+  //     if (!projects || projects.length === 0) {
+  //       alert('No projects found. Please create a project first.');
+  //       return;
+  //     }
       
-      const latestProject = projects[0];
-      const timestamp = new Date().getTime();
-      const storageKey = `transcript_for_generation_${timestamp}`;
+  //     const latestProject = projects[0];
+  //     const timestamp = new Date().getTime();
+  //     const storageKey = `transcript_for_generation_${timestamp}`;
       
-      localStorage.setItem(storageKey, transcript);
-      localStorage.setItem('latest_transcript_key', storageKey);
+  //     localStorage.setItem(storageKey, transcript);
+  //     localStorage.setItem('latest_transcript_key', storageKey);
       
-      const TRANSCRIPT_FRAMEWORK = 'cdc6d49e-9474-48aa-9efb-4095710ad011';
-      const url = `/project/${latestProject.id}/tool/regenerate-ads?framework=${TRANSCRIPT_FRAMEWORK}&ts=${timestamp}&autogenerate=true`;
+  //     const TRANSCRIPT_FRAMEWORK = 'cdc6d49e-9474-48aa-9efb-4095710ad011';
+  //     const url = `/project/${latestProject.id}/tool/regenerate-ads?framework=${TRANSCRIPT_FRAMEWORK}&ts=${timestamp}&autogenerate=true`;
       
-      window.open(url, '_blank');
-    } catch (err) {
-      console.error('Error:', err);
-      alert(`Failed to open content generator: ${err instanceof Error ? err.message : 'Unknown error'}`);
-    }
-  };
+  //     window.open(url, '_blank');
+  //   } catch (err) {
+  //     console.error('Error:', err);
+  //     alert(`Failed to open content generator: ${err instanceof Error ? err.message : 'Unknown error'}`);
+  //   }
+  // };
 
   const closeTranscript = () => {
     // console.log('Explicitly closing transcript');
@@ -187,7 +187,7 @@ export default function VideoTranscriptUI({ adId, mediaType, initialTranscript =
             <h3 className="text-xs font-semibold text-gray-700">Video Transcript</h3>
             <div className="flex gap-2">
               <button
-                onClick={handleRegenerateButtonClick}
+                // onClick={handleRegenerateButtonClick}
                 className="text-xs bg-green-700 text-white px-2 py-1 rounded-sm cursor-pointer"
               >
                 Swipe This Script

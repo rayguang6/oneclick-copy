@@ -55,3 +55,35 @@ export interface PaginatedSearchParams {
     created_at: string;
     updated_at?: string;
   }
+
+  export interface Project {
+    id: string
+    user_id: string
+    created_at: string
+    updated_at: string
+    name: string 
+    industry: string,
+    guru_details: string,
+    audience: string,
+    painpoints: string,
+    product: string,
+    usp: string,
+    competitor: string,
+    student_transformation: string,
+    case_study: string;
+  }
+  
+  
+  // Project form data (used for creating/updating)
+  export interface ProjectFormData {
+    name: string
+    industry: string,
+    guru_details: string,
+    audience: string,
+    painpoints: string,
+    product: string,
+    usp: string,
+    competitor: string,
+    student_transformation: string,
+    case_study: string;
+  }

@@ -2,8 +2,6 @@ import { ROUTES } from "@/app/constants/routes";
 import AdCard from "../../components/AdCard";
 import { getAds } from "../../lib/actions/ads.actions";
 import { getLoggedInUser } from "../../lib/actions/auth.actions";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
 import LocalSearch from "@/app/components/search/LocalSearch";
 import DataRenderer from "@/app/components/DataRenderer";
 import Pagination from "@/app/components/Pagination";
@@ -16,10 +14,11 @@ interface SearchParams {
 }
 
 export default async function AdsPage({ searchParams }: SearchParams) {
+  const { page, pageSize, query, filter, sort } = await searchParams;
+  
   const user = await getLoggedInUser();
   const userId = user.id;
-  const { page, pageSize, query, filter, sort } = await searchParams;
-
+  
   const currentPage = Number(page) || 1;
   const currentPageSize = Number(pageSize) || 12;
 
@@ -34,10 +33,10 @@ export default async function AdsPage({ searchParams }: SearchParams) {
     {
       page: currentPage,
       pageSize: currentPageSize,
-      query: query || "",
-      filter: filter || "",
-      sort: sort || "",
-      userId: user.id,
+      query: query,
+      filter: filter,
+      sort: sort,
+      // userId: user.id,
     },
     user.id
   );
@@ -48,6 +47,7 @@ export default async function AdsPage({ searchParams }: SearchParams) {
   const totalPages = Math.ceil((count || 0) / currentPageSize);
 
   // Construct search context message
+  // Tell Users how many results get from the 'search term'
   const searchContext = () => {
     const parts = [];
     if (query) parts.push(`"${query}"`);
