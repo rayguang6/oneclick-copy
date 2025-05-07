@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { useTagStore } from '@/app/store/tagStore';
-import { Tag } from '@/app/types/global';
+
 
 interface TagSelectorProps {
   selectedTagId: string | null; // Changed from array to single string or null

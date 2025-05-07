@@ -1,9 +1,10 @@
 import { getProjects } from "../../lib/actions/project.actions";
 import DataRenderer from "../components/DataRenderer";
-import { EMPTY_PROJECTS } from "../constants/states";
+import { EMPTY_PROJECTS } from "@/constants/states";
 import ProjectCard from "../components/projects/ProjectCard";
 
 export default async function Home({searchParams}: RouteParams ) {
+
 
   const { page, pageSize, query, filter } = await searchParams;
 

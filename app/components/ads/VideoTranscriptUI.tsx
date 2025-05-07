@@ -131,9 +131,7 @@ export default function VideoTranscriptUI({ adId, mediaType, initialTranscript =
           ${isLoading
             ? 'bg-gray-200 text-gray-500 cursor-wait'
             : hasTranscript
-              ? (isOpen
-                  ? 'bg-green-500 text-white hover:bg-green-600'
-                  : 'bg-green-50 text-green-700 hover:bg-green-100')
+              ? 'border border-primary-500 text-primary-500 hover:bg-primary-600'
               : 'bg-blue-100 text-blue-700 hover:bg-blue-200'
           }
           transition-colors duration-200
@@ -174,11 +172,11 @@ export default function VideoTranscriptUI({ adId, mediaType, initialTranscript =
         </div>
       )}
       
-      {process.env.NODE_ENV === 'development' && (
+      {/* {process.env.NODE_ENV === 'development' && (
         <div className="mt-1 text-xs text-gray-400">
           isOpen: {isOpen ? 'true' : 'false'}, hasTranscript: {hasTranscript ? 'true' : 'false'}
         </div>
-      )}
+      )} */}
       
       {hasTranscript && isOpen && (
         <div className="mt-2 p-3 rounded-md border border-gray-200 bg-gray-50 text-xs text-gray-700 whitespace-pre-line">

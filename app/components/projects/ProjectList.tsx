@@ -1,6 +1,6 @@
 // import React from 'react'
 // import { getProjects } from '@/app/lib/actions/project.actions'
-// import { Project } from '@/app/types/global'
+
 // interface SearchParams {
 // searchParams: Promise<{ [key: string]: string }>;
 // }

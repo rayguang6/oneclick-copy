@@ -5,6 +5,7 @@ export const ROUTES = {
     ADS_LIBRARY: '/ads',
     REEVE_COLLECTION: '/reeve-collection',
     PROJECT: (id: string) => `/projects/${id}`,
+    PROFILE: (id: string) => `/profile/${id}`,
   }
   
   export const NAV_LINKS = [

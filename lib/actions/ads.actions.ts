@@ -1,9 +1,6 @@
 import { createClient } from "@/app/utils/supabase/server";
 import { getLoggedInUser } from "./auth.actions";
 import { cache } from "react";
-import { Ad } from "@/app/types/global";
-import { PaginatedSearchParams } from "@/app/types/global";
-import { ActionResponse } from "@/app/types/global";
 
 
 export async function getAds(

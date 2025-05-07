@@ -5,7 +5,7 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import AdTagEditor from './ads/AdTagEditor';
 import { getTagsForAd } from '../../lib/actions/tags.actions';
 import { createClient } from '@/app/utils/supabase/client';
-import { Ad, Tag } from '@/app/types/global';
+
 import { createPortal } from 'react-dom';
 import VideoTranscriptUI from './ads/VideoTranscriptUI';
 
@@ -292,38 +292,41 @@ export default function AdCard({ ad, readOnly = false }: AdCardProps) {
                                     </svg>
                                 </button>
 
-                                {/* Header */}
-                                <div className="flex items-center gap-3 mb-6">
-                                    <Avatar className="h-12 w-12">
-                                        <AvatarImage src={ad.profile_image_url} />
-                                        <AvatarFallback>{ad.advertiser_name?.[0]}</AvatarFallback>
-                                    </Avatar>
-                                    <div>
-                                        <h3 className="font-semibold text-lg">{ad.advertiser_name}</h3>
-                                        <p className="text-sm text-gray-500">Sponsored</p>
+
+                                    {/* Header */}
+                                    <div className="flex items-center gap-3 mb-6 py-3">
+                                        <Avatar className="h-12 w-12">
+                                            <AvatarImage src={ad.profile_image_url} />
+                                            <AvatarFallback>{ad.advertiser_name?.[0]}</AvatarFallback>
+                                        </Avatar>
+                                        <div>
+                                            <h3 className="font-semibold text-lg">{ad.advertiser_name}</h3>
+                                            <p className="text-sm text-gray-500">Sponsored</p>
+                                        </div>
                                     </div>
-                                </div>
 
-                                {/* Ad Text */}
-                                <div className="prose max-w-none mb-6">
-                                    
-                                    <p className="whitespace-pre-wrap text-gray-700">{ad.ad_text}</p>
-                                    <button
-                                        onClick={handleSwipeClick}
-                                        className="text-[10px] bg-green-700 mt-4 text-white px-6 py-3 rounded-sm cursor-pointer hover:bg-green-800 transition-colors"
-                                    >
-                                        <p className='text-lg'>
-                                            ✏️ Swipe & Rewrite Ads
-                                        </p>
-                                    </button>
-                                </div>
+                                    <div className="flex flex-col gap-2 py-4">
+                                        {/* Ad Text */}
+                                        <div className="prose max-w-none">
+                                            
+                                            <p className="whitespace-pre-wrap text-gray-700">{ad.ad_text}</p>
+                                            <button
+                                                onClick={handleSwipeClick}
+                                                className="text-[10px] bg-primary-500 mt-2 mb-2 text-white px-2 py-1 rounded-sm cursor-pointer hover:bg-primary-600 transition-colors"
+                                            >
+                                                <p className='text-md'>
+                                                    ✏️ Swipe & Rewrite Ads
+                                                </p>
+                                            </button>
+                                        </div>
 
-                                {/* Video Transcript UI */}
-                                <VideoTranscriptUI
-                                    adId={ad.id}
-                                    mediaType={ad.media_type}
-                                    initialTranscript={existingTranscript}
-                                />
+                                        {/* Video Transcript UI */}
+                                        <VideoTranscriptUI
+                                            adId={ad.id}
+                                                mediaType={ad.media_type}
+                                                initialTranscript={existingTranscript}
+                                            />
+                                    </div>
 
                                 {/* Tags Section */}
                                 <div className="border-t pt-4">

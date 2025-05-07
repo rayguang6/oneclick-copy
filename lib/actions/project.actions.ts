@@ -5,11 +5,6 @@ import { createClient } from "@/app/utils/supabase/server";
 import logger from "../logger";
 export type ResponseType = "api" | "server";
 
-interface Project {
-  id: string;
-  name: string;
-// Add other project fields as needed
-}
 
 // export async function getUserProjects(): Promise<Project[]> {
 //   // TODO: Implement actual project fetching

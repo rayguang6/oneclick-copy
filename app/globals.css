@@ -13,23 +13,23 @@ body {
 @custom-variant dark (&:is(.dark *));
 
 @theme {
-  --color-primary-100: #fff1e6;
-  --color-primary-500: #EC0936;
-
-  --color-dark-100: #B20A2C;   /* Very dark, almost maroon */
-  --color-dark-200: #A10C28;   /* Darker red */
-  --color-dark-300: #8B0B22;   /* Deep red */
-  --color-dark-400: #73091B;   /* Very deep, muted red */
-  --color-dark-500: #4A0611;   /* Almost black with a red tint */
-
-  --color-light-400: #FFB3C6;  /* Light pink */
-  --color-light-500: #FF8DA1;  /* Lighter, but more saturated pink */
-  --color-light-700: #FFD6DF;  /* Very light pink */
-  --color-light-800: #FFE5EC;  /* Extremely light, almost white pink */
-  --color-light-850: #FFF2F6;  /* Nearly white with a pink hue */
-  --color-light-900: #FFFFFF;  /* Pure white */
-
-  --color-link-100: #1da1f2;
+  --color-primary-100: #e6f0ff;   /* Very light blue */
+  --color-primary-500: #1479ff;   /* Main blue */
+  
+  --color-dark-100: #0a2a4a;      /* Very dark blue */
+  --color-dark-200: #10407a;      /* Darker blue */
+  --color-dark-300: #1251a3;      /* Deep blue */
+  --color-dark-400: #1363cc;      /* Muted blue */
+  --color-dark-500: #0d1e33;      /* Almost black with a blue tint */
+  
+  --color-light-400: #a3c9ff;     /* Light blue */
+  --color-light-500: #7bb3ff;     /* Lighter, but more saturated blue */
+  --color-light-700: #cce2ff;     /* Very light blue */
+  --color-light-800: #e6f0ff;     /* Extremely light, almost white blue */
+  --color-light-850: #f2f8ff;     /* Nearly white with a blue hue */
+  --color-light-900: #ffffff;     /* Pure white */
+  
+  --color-link-100: #1479ff;      /* Use main blue for links */
 
   --radius-2: 8px;
   --radius-1_5: 6px;
@@ -264,7 +264,7 @@ body {
 }
 
 @utility primary-gradient {
-  background: linear-gradient(129deg, #ff7000 0%, #e2995f 100%);
+  background: linear-gradient(129deg, #1479ff 0%, #14d2ff 100%);
 }
 
 @utility dark-gradient {
