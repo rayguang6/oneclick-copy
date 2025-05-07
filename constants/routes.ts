@@ -7,7 +7,7 @@ export const ROUTES = {
     PROFILE: (id: string) => `/profile/${id}`,
     PROJECT: (projectId: string) => `/projects/${projectId}`,
     TOOL: (projectId: string, toolSlug: string) => `/projects/${projectId}/tools/${toolSlug}`,
-    TOOL_CONVERSATION: (projectId: string, toolSlug: string, conversationId: string) => `/projects/${projectId}/tools/${toolSlug}/conversations/${conversationId}`,
+    CONVERSATION: (projectId: string, toolSlug: string, conversationId: string) => `/projects/${projectId}/tools/${toolSlug}/conversations/${conversationId}`,
 }
 
 export const NAV_LINKS = [

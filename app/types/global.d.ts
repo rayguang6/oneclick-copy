@@ -93,3 +93,15 @@ interface Framework{
   is_default: boolean
   created_at: string
 }
+
+interface Conversation {
+  id: string;
+  user_id: string;
+  project_id: string;
+  tool_id: string;
+  framework: string;
+  title: string;
+  project_context?: any; // JSONB from database
+  created_at: string;
+  updated_at: string;
+}

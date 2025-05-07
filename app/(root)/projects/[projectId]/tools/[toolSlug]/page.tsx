@@ -1,22 +1,28 @@
-import React from 'react'
+// app/(root)/projects/[projectId]/tools/[toolSlug]/page.tsx
+import React from 'react';
 
-type RouteParams = {
-    params: { projectId: string; toolSlug: string };
-    searchParams: { page?: string; pageSize?: string; filter?: string };
+type PageProps = {
+  params: {
+    projectId: string;
+    toolSlug: string;
   };
+};
 
-const ToolDetails = async ({ params, searchParams }: RouteParams) => {
-    const { projectId, toolSlug } = await params;
-    // const { success, data: project } = await getProject({ projectId }); 
+export default function ToolLandingPage({ params }: PageProps) {
+  const { projectId, toolSlug } = params;
   
-    // if (!project) return <div className="p-8 text-center">Project not found</div>;
-    return (
-        <div>
-            <h1>Tool Details</h1>
-            <p>Project ID: {projectId}</p>
-            <p>Tool Slug: {toolSlug}</p>
+  return (
+    <div className="h-full flex items-center justify-center bg-gray-50">
+      <div className="text-center max-w-md p-6">
+        <h2 className="text-2xl font-bold text-gray-800 mb-4">Welcome to the Chat Tool</h2>
+        <p className="text-gray-600 mb-6">
+          Select an existing conversation from the sidebar or create a new one to get started.
+        </p>
+        <div className="bg-blue-50 p-4 rounded-lg text-sm text-blue-800 border border-blue-200">
+          <p>Project ID: {projectId}</p>
+          <p>Tool: {toolSlug}</p>
         </div>
-    )
+      </div>
+    </div>
+  );
 }
-
-export default ToolDetails

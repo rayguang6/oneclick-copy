@@ -37,3 +37,8 @@ export const EMPTY_TOOLS = {
   message:
     "The tool board is empty. Make it rain with your brilliant tool.",
 };
+export const EMPTY_CONVERSATIONS = {
+  title: "No Conversations Found",
+  message:
+    "No Conversations Found",
+};
