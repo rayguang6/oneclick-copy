@@ -6,6 +6,8 @@ import logger from "../logger";
 import { cache } from "react";
 import action from "../handlers/action";
 import { GetProjectSchema } from "../validations";
+import { revalidatePath } from "next/cache";
+
 export type ResponseType = "api" | "server";
 
 
@@ -111,3 +113,85 @@ export const getProject = cache(async function getProject(
     return handleError(error) as ErrorResponse;
   }
 });
+
+
+export async function updateProject(id: string, formData: Partial<Project>) {
+  const supabase = await createClient()
+  const currentUser = await supabase.auth.getUser()
+  
+  try {
+    const { data, error } = await supabase
+      .from('projects')
+      .update(formData)
+      .eq('id', id)
+      .eq('user_id', currentUser.data.user?.id) // Security: ensure user owns project
+      .select()
+
+    if (error) throw new Error('Failed to update project: ' + error.message)
+    
+    // Only revalidate the project page to avoid unnecessary refreshes
+    revalidatePath(`/project/${id}`)
+    
+    return data[0] as Project
+  } catch (error) {
+    console.error('updateProject error:', error)
+    throw error
+  }
+}
+
+/**
+ * Delete a project
+ */
+export async function deleteProject(id: string) {
+  const supabase = await createClient()
+  const currentUser = await supabase.auth.getUser()
+
+  try {
+    const { error } = await supabase
+      .from('projects')
+      .delete()
+      .eq('id', id)
+      .eq('user_id', currentUser.data.user?.id) // Security: ensure user owns project
+
+    if (error) throw new Error('Failed to delete project: ' + error.message)
+    
+    // Only need to revalidate home page after deletion
+    revalidatePath('/')
+  } catch (error) {
+    console.error('deleteProject error:', error)
+    throw error
+  }
+}
+
+/**
+ * Create a new project
+ */
+export async function createProject(formData: Omit<Project, 'id' | 'user_id' | 'created_at' | 'updated_at'>) {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  
+  if (!user) {
+    throw new Error('Authentication required')
+  }
+
+  try {
+    const { data, error } = await supabase
+      .from('projects')
+      .insert({
+        ...formData,
+        user_id: user.id
+      })
+      .select()
+      .single()
+
+    if (error) throw new Error('Failed to create project: ' + error.message)
+    
+    // Revalidate the home page to show the new project
+    revalidatePath('/')
+    
+    return data as Project
+  } catch (error) {
+    console.error('createProject error:', error)
+    throw error
+  }
+}

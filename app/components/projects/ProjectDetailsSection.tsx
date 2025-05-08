@@ -6,6 +6,7 @@ import Modal from '@/app/components/ui/Modal'
 // import { updateProject, deleteProject } from '@/app/lib/actions/project.actions'
 import { useRouter } from 'next/navigation'
 import ProjectForm from './ProjectForm'
+import { deleteProject, updateProject } from '@/lib/actions/projects.actions'
 
 type Props = {
   project: Project
@@ -21,39 +22,39 @@ export default function ProjectDetailsSection({ project }: Props) {
   const [error, setError] = useState<string | null>(null)
 
   // Save project details to the database
-  const saveProject = async (formData: ProjectFormData) => {
-    // setIsSaving(true)
-    // setError(null)
+  const saveProject = async (formData: Project) => {
+    setIsSaving(true)
+    setError(null)
     
-    // try {
-    //   const updatedProject = await updateProject(projectId, formData)
-    //   setCurrentProject(updatedProject)
-    //   setShowDetails(false) // Hide details after saving
-    // } catch (err: any) {
-    //   console.error('Error saving project:', err)
-    //   setError(err.message || 'Failed to save project details')
-    // } finally {
-    //   setIsSaving(false)
-    // }
+    try {
+      const updatedProject = await updateProject(project.id, formData)
+      setCurrentProject(updatedProject)
+      setShowDetails(false) // Hide details after saving
+    } catch (err: any) {
+      console.error('Error saving project:', err)
+      setError(err.message || 'Failed to save project details')
+    } finally {
+      setIsSaving(false)
+    }
     alert('Clicked save project')
   }
 
   // Handle project deletion
-//   const handleDeleteProject = async () => {
-//     setIsDeleting(true)
-//     setError(null)
+  const handleDeleteProject = async () => {
+    setIsDeleting(true)
+    setError(null)
     
-//     try {
-//       await deleteProject(projectId)
-//       // Redirect to dashboard after successful deletion
-//       router.push('/')
-//     } catch (err: any) {
-//       console.error('Error deleting project:', err)
-//       setError(err.message || 'Failed to delete project')
-//       setIsDeleting(false)
-//       setShowDeleteConfirm(false)
-//     }
-//   }
+    try {
+      await deleteProject(project.id)
+      // Redirect to dashboard after successful deletion
+      router.push('/')
+    } catch (err: any) {
+      console.error('Error deleting project:', err)
+      setError(err.message || 'Failed to delete project')
+      setIsDeleting(false)
+      setShowDeleteConfirm(false)
+    }
+  }
 
   // Extract form data from project
 
@@ -157,7 +158,7 @@ export default function ProjectDetailsSection({ project }: Props) {
               Cancel
             </button>
             <button
-            //   onClick={handleDeleteProject}
+              onClick={handleDeleteProject}
               className={`px-4 py-2 rounded-md text-white ${isDeleting ? 'bg-red-400' : 'bg-red-600 hover:bg-red-700'} flex items-center gap-2`}
               disabled={isDeleting}
             >
