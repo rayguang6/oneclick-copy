@@ -99,9 +99,19 @@ interface Conversation {
   user_id: string;
   project_id: string;
   tool_id: string;
-  framework: string;
+  framework?: string;
   title: string;
   project_context?: any; // JSONB from database
+  created_at?: string;
+  updated_at?: string;
+}
+
+interface Chat {
+  id: string;
+  conversation_id: string;
+  role: ChatRole;
+  content: string;
+  prompt?: string; // Optional for system messages
+  is_favorite: boolean;
   created_at: string;
-  updated_at: string;
 }

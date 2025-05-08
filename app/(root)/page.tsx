@@ -16,8 +16,9 @@ export default async function Home({searchParams}: RouteParams ) {
   });
 
   const { projects } = data || {};
-  console.log("projects from home page", projects);
+
   return (
+    
     <div className="container mx-auto px-4 py-6">
       <header className="mb-6">
         <h1 className="text-2xl font-bold text-gray-800">Your Projects</h1>

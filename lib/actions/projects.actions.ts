@@ -11,15 +11,13 @@ export type ResponseType = "api" | "server";
 
 // export async function getUserProjects(): Promise<Project[]> {
 //   // TODO: Implement actual project fetching
-//   console.log('Project fetching not implemented yet');
 //   return [];
 // } 
 
 
 export async function getProjects(params: PaginatedSearchParams): Promise<ActionResponse<{
-  projects: Project[];
-  // isNext: boolean;
-}>
+    projects: Project[];
+  }>
 > {
 
   const { page = 1, pageSize = 10, query, filter } = params;

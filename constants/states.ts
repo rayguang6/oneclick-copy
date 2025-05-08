@@ -42,3 +42,10 @@ export const EMPTY_CONVERSATIONS = {
   message:
     "No Conversations Found",
 };
+
+export const EMPTY_CONVERSATION = {
+  title: "No Conversation Found",
+  message:
+    "No Conversation Found",
+};
+

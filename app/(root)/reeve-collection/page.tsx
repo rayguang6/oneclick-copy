@@ -7,14 +7,14 @@ import Pagination from "@/app/components/Pagination";
 import TagFilterGroup from "@/app/components/filters/TagFilterGroup";
 
 import { getTagsForUser } from "@/lib/actions/tags.actions";
-
+import { ADMIN_USER_ID } from "@/constants/constant";
 interface SearchParams {
   searchParams: Promise<{ [key: string]: string }>;
 }
 
 export default async function AdsPage({ searchParams }: SearchParams) {
   // const user = await getLoggedInUser();
-  const userId = "2a8c13a2-9df6-4a4b-af13-75f9f32a3d65";
+  const userId = ADMIN_USER_ID;
   const { page, pageSize, query, filter, sort } = await searchParams;
 
   const currentPage = Number(page) || 1;

@@ -127,7 +127,7 @@ export default function AdCard({ ad, readOnly = false }: AdCardProps) {
 
     const handleSwipeClick = (e: React.MouseEvent) => {
         e.stopPropagation();
-        // Add your swipe functionality here
+        // TODO: Add your swipe functionality here
         console.log('Alert' );
     };
 

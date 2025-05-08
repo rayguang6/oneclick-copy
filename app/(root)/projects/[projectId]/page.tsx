@@ -41,7 +41,7 @@ const ProjectDetails = async ({ params, searchParams }: RouteParams) => {
   });
 
   return (
-    <div className="mx-auto">
+    <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8">
       {/* Header with back button */}
       <div className="mb-8">
         <Link 

@@ -21,7 +21,7 @@ interface TranscriptResponse {
  */
 export async function checkTranscriptExists(adId: string): Promise<string | null> {
   try {
-    console.log(`Checking if transcript exists for ad ${adId}`);
+
     const supabase = await createClient();
     
     // Check if the ad has a transcript already
@@ -37,7 +37,6 @@ export async function checkTranscriptExists(adId: string): Promise<string | null
     }
     
     // Log the result for debugging
-    console.log(`Transcript check result: ${data?.transcription ? 'found' : 'not found'}`);
     
     return data?.transcription || null;
   } catch (error) {
@@ -103,7 +102,6 @@ async function transcribeWithProxy(mediaUrl: string): Promise<string> {
   // Replace this with an actual service like AssemblyAI, Rev.ai, etc.
   
   // For this example, we'll use a mock service
-  console.log('Using proxy transcription service for URL:', mediaUrl);
   
   // Mock implementation for development
   if (!process.env.OPENAI_API_KEY) {
@@ -120,20 +118,19 @@ async function transcribeWithProxy(mediaUrl: string): Promise<string> {
  */
 export async function getVideoTranscript(adId: string): Promise<TranscriptResponse> {
   try {
-    console.log(`Getting transcript for ad ${adId}`);
+
     const supabase = await createClient();
     
     // Check if we already have a transcript in the database
     const existingTranscript = await checkTranscriptExists(adId);
     if (existingTranscript) {
-      console.log(`Found existing transcript for ad ${adId}`);
+
       return {
         text: existingTranscript,
         error: null
       };
     }
     
-    console.log(`No existing transcript found for ad ${adId}, generating new one`);
     
     // Get the video URL
     const { data: adWithMedia, error: mediaError } = await supabase
@@ -163,19 +160,16 @@ export async function getVideoTranscript(adId: string): Promise<TranscriptRespon
     
     // Check if OpenAI is configured
     if (!openai) {
-      console.log('OpenAI API key not found, using mock transcript');
       // Use mock transcript if Whisper API is not available
       transcript = `This is a mock transcript for video ${adId}. In production, this would be generated using OpenAI's Whisper API.
       
 To use real transcription, add your OpenAI API key to your environment variables as OPENAI_API_KEY.`;
     } else {
       try {
-        console.log(`Starting transcription process for ad ${adId}`);
         
         // Use the direct URL transcription approach
         transcript = await transcribeDirectlyFromUrl(videoUrl);
         
-        console.log(`Transcription complete for ad ${adId}`);
       } catch (error) {
         console.error('Error in transcription process:', error);
         return {

@@ -1,27 +1,21 @@
-// lib/actions/chat.actions.ts
-"use server";
+'use server'
 
-import { createClient } from "@/app/utils/supabase/server";
-import handleError from "@/lib/handlers/error";
+import { createClient } from '@/app/utils/supabase/server';
+import { revalidatePath } from 'next/cache';
 
-type Message = {
-  id: string;
-  conversation_id: string;
-  role: 'user' | 'system';
-  content: string;
-  created_at: string;
-};
+// This file contains server actions for chats
+// It's marked with 'use server' at the top, so it can be imported in client components
 
-export async function getChatMessages(params: {
-  conversationId: string;
-}): Promise<ActionResponse<{ messages: Message[] }>> {
-  const { conversationId } = params;
-
+export async function getChatMessages({ 
+  conversationId 
+}: { 
+  conversationId: string; 
+}) {
   try {
     const supabase = await createClient();
     
     // Fetch messages for this conversation
-    const { data: messages, error } = await supabase
+    const { data: chats, error } = await supabase
       .from('chats')
       .select('*')
       .eq('conversation_id', conversationId)
@@ -31,54 +25,62 @@ export async function getChatMessages(params: {
     
     return {
       success: true,
-      data: { messages: messages || [] }
+      data: { chats: chats || [] },
     };
   } catch (error) {
-    return handleError(error) as ErrorResponse;
+    console.error('Error fetching chat messages:', error);
+    return {
+      success: false,
+      error: error.message
+    };
   }
 }
 
-export async function sendMessage(params: {
+export async function saveChatMessage({
+  conversationId,
+  content,
+  role,
+}: {
   conversationId: string;
   content: string;
-}): Promise<ActionResponse<{ message: Message }>> {
-  const { conversationId, content } = params;
-
+  role: 'user' | 'system';
+}) {
   try {
     const supabase = await createClient();
-    const currentUser = await supabase.auth.getUser();
+    const { data: { user } } = await supabase.auth.getUser();
     
-    // Add user message
-    const { data: message, error } = await supabase
-      .from('messages')
-      .insert({
-        conversation_id: conversationId,
-        role: 'user',
-        content,
-        user_id: currentUser.data.user?.id,
-      })
+    if (!user) {
+      return { 
+        success: false, 
+        error: 'User not authenticated' 
+      };
+    }
+    
+    const { data, error } = await supabase
+      .from('chats')
+      .insert([{ 
+        conversation_id: conversationId, 
+        content, 
+        role,
+        user_id: user.id
+      }])
       .select()
       .single();
       
     if (error) throw error;
     
-    // In a real app, you would call an AI service here
-    // For MVP, we'll simulate an AI response
-    const { data: aiMessage } = await supabase
-      .from('messages')
-      .insert({
-        conversation_id: conversationId,
-        role: 'system',
-        content: `This is a simulated response to: "${content}"`,
-      })
-      .select()
-      .single();
+    // Revalidate the conversation page
+    revalidatePath(`/projects/[projectId]/tools/[toolSlug]/conversations/${conversationId}`);
     
     return {
       success: true,
-      data: { message }
+      data: { chat: data },
     };
   } catch (error) {
-    return handleError(error) as ErrorResponse;
+    console.error('Error saving chat message:', error);
+    return {
+      success: false,
+      error: error.message
+    };
   }
 }

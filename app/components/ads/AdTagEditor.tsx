@@ -224,11 +224,9 @@ export default function AdTagEditor({ adId, onClose, anchorRect, currentTags, on
 
   const handleUpdateTagColor = async (tag: Tag, color: string) => {
     try {
-      console.log('Updating tag color:', tag.id, tag.name, color);
       
       // Update the tag through the store
       await updateTagInStore(tag.id, tag.name, color);
-      console.log('Tag color updated in store');
       
       // Refresh tags from the server to ensure UI is in sync
       const refreshedTags = await getAllTags();
@@ -240,9 +238,9 @@ export default function AdTagEditor({ adId, onClose, anchorRect, currentTags, on
       ));
       
       setEditingTag(null);
-      console.log('Tag color update complete');
+
     } catch (error) {
-      console.error('Error updating tag color:', error);
+
       alert(`Failed to update tag color: ${(error as Error).message}`);
     }
   };

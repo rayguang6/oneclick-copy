@@ -1,23 +1,23 @@
-// app/layout.tsx (Root Layout)
-"use server";
-
 import { ReactNode } from "react";
 import Navbar from "@/app/components/navigation/Navbar";
+import { getLoggedInUser } from "@/app/utils/supabase/getUser";
+import { UserContextProvider } from "../context/UserContext";
 
 const RootLayout = async ({ children }: { children: ReactNode }) => {
+  const loggedInUser = await getLoggedInUser(); 
   return (
-    <html>
-      <body className="flex flex-col h-screen bg-white dark:bg-gray-900 overflow-hidden">
-        <Navbar />
-        <main className="">
-        <div className="mx-auto w-full pt-24">
-        {/* <main className="flex-1 overflow-hidden pt-24 px-16">  */}
-          {children}
-        {/* </main> */}
+    <>
+      {/* Only include Navbar here in the (root) layout, not in the top-level layout */}
+      <Navbar />
+      
+      <main className="w-full overflow-hidden">
+        <div className="mx-auto w-full ">
+          <UserContextProvider user={loggedInUser}> 
+            {children}
+          </UserContextProvider>
         </div>
-        </main>
-      </body>
-    </html>
+      </main>
+    </>
   );
 };
 

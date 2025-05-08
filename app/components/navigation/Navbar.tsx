@@ -12,7 +12,7 @@ const Navbar = async () => {
   const { data: { user } } = await supabase.auth.getUser();
 
   return (
-    <nav className="flex-between background-light900_dark200 fixed z-50 w-full gap-5 p-4 shadow-md dark:shadow-none sm:px-12">
+    <nav className="flex-between background-light900_dark200 sticky top-0 z-50 w-full gap-5 p-4 shadow-md dark:shadow-none sm:px-12">
     <Link href={ROUTES.HOME} className="flex items-center gap-1">
       <Image
         src="/images/logo.png"
